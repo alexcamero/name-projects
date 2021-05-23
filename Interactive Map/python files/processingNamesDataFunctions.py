@@ -4,23 +4,30 @@
 @author: Alex Cameron
 """
 
-import csv, json, os
+import csv, json, os, string
 import networkx as nx
 
 header_state = ['state','sex','year','name','number']
 header_year = ['name','sex','number']
 
-states = ['NAT', 'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
-letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+states = ['NAT', 'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 
+          'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 
+          'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 
+          'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 
+          'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
+letters = list(string.ascii_uppercase)
 
 
 minYear=1937
 maxYear=2020
-directoryState = 'names/namesbystate/'
-directoryYear = 'names/namesbyyear/'
-namesFilePath = 'namesList.json'
+directoryState = '../../name_data/names_by_state/'
+directoryYear = '../../name_data/names_by_year/'
+namesFilePath = 'names_list.json'
 
-def makeListOfAllNames(min_year = minYear, max_year = maxYear, directory_state = directoryState, directory_year = directoryYear, names_file_target = namesFilePath):
+def makeListOfAllNames(min_year = minYear, max_year = maxYear, 
+                       directory_state = directoryState, 
+                       directory_year = directoryYear, 
+                       names_file_target = namesFilePath):
 
     names = set()
     
