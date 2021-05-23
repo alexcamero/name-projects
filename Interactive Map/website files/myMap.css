@@ -1,0 +1,29 @@
+legend {
+	background-color: #aaaaaa;
+	font-size: 1rem;
+}
+
+.crisp {
+	shape-rendering: crispedges;
+}
+
+.statefill {
+
+	stroke: transparent;
+	shape-rendering: crispedges;
+
+}
+
+.stateboundary {
+
+	fill-opacity: 0;
+	shape-rendering: auto;
+	stroke: #000000;
+	stroke-width=0.95;
+}
+
+
+.phoneControls {
+  background-color: #ffffff;
+  border: solid #0000ff 1px;
+}
