@@ -189,10 +189,10 @@ if (isset($_GET["sex"])) {
           </div>
         </div>
       </div>
-    </div>
+
     
-    <div id="about" class="row mt-3">
-      <h3>About</h3>
+      <div id="about" class="row mt-3">
+        <h3>About</h3>
         <p>
           This interactive map shows the most popular baby names for each US state 
           and DC by year (1937 to 2020) according to the Social Security Administration. 
