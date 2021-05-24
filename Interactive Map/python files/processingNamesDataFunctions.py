@@ -2,6 +2,19 @@
 import csv, json, os, string
 import networkx as nx
 
+"""To produce all of the json files you need to make the interactive 
+map you can set the min and max year in the following lines as well as
+the paths to where you have the csv files containing the data and
+the location you'd like the output to go to.
+Then you can just run this file."""
+
+minYear=1937
+maxYear=2020
+directoryState = '../../Name Data/namesbystate/'
+directoryYear = '../../Name Data/namesbyyear/'
+namesFilePath = 'distinct_names_list.json'
+siteFolder = '../website files/'
+
 header_state = ['state','sex','year','name','number']
 header_year = ['name','sex','number']
 
@@ -11,14 +24,6 @@ states = ['NAT', 'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL',
           'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 
           'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY']
 letters = list(string.ascii_uppercase)
-
-
-minYear=1937
-maxYear=2020
-directoryState = '../../Name Data/namesbystate/'
-directoryYear = '../../Name Data/namesbyyear/'
-namesFilePath = '../../Name Data/json files/distinct_names_list.json'
-siteFolder = '../website files'
 
 def make_list_of_all_names(min_year = minYear, max_year = maxYear, 
                        directory_year = directoryYear, 
@@ -50,7 +55,6 @@ def make_list_of_all_names(min_year = minYear, max_year = maxYear,
         json.dump(names, file)
         
 
-
 def make_individual_name_files(min_year = minYear, max_year = maxYear, 
                             directory_state = directoryState, 
                             directory_year = directoryYear, 
@@ -59,11 +63,11 @@ def make_individual_name_files(min_year = minYear, max_year = maxYear,
     """This function creates a directory of json files, one for each name
     listed in the names_file. Each file is a 52 by (max_year+1 - min_year)
     matrix where the (i,j)th entry gives the number of times the name was
-    given to a baby in state i in year j (state 0 is all of the US).""""
+    given to a baby in state i in year j (state 0 is all of the US)."""
     
     #make the directory
     for let in letters:
-        path = os.path.join(site_dir + "/namesData/", let)
+        path = os.path.join(site_dir + "namesData/", let)
         os.mkdir(path)
     
     #load the names
@@ -97,7 +101,7 @@ def make_individual_name_files(min_year = minYear, max_year = maxYear,
                 
     #produce the individual json files for each distinct name         
     for name in bigD.keys():
-        path = os.path.join(site_dir + '/namesData/' + name[0:1] + '/', 
+        path = os.path.join(site_dir + 'namesData/' + name[0:1] + '/', 
                             name + '.json')
         with open(path, 'w') as file:
             json.dump(bigD[name], file)
@@ -199,9 +203,9 @@ def most_popular_data(min_year = minYear, max_year = maxYear,
                     break
                 
     #write the big dictionaries to json files
-    with open(site_dir + '/mostPopStates.json', 'w') as file:
+    with open(site_dir + 'mostPopStates.json', 'w') as file:
         json.dump(most_pop_states, file)
-    with open(site_dir + '/mostPopNat.json', 'w') as file:
+    with open(site_dir + 'mostPopNat.json', 'w') as file:
         json.dump(most_pop_national, file)
                 
 
@@ -211,15 +215,20 @@ def make_names_graph(sex = 'B', min_year = minYear, max_year = maxYear,
     some state, but not in the US in a at least one year, i.e. names that
     receive a shade of gray on the map in at least one year, and has
     edge set of pairs of names that do this in the same year at least
-    once, i.e. pairs of names that need two different shades of gray."""
+    once, i.e. pairs of names that need two different shades of gray.
     
-    #initialize the graph
+    Also returns a list of the names that appear in the graph ordered, 
+    descending, by the number of years each name appears on the map 
+    in this way."""
+    
+    #initialize the graph and the name weights
     names_graph = nx.Graph()
+    weights={}
     
     #open the files with the most popular names data
-    with open(site_dir + '/mostPopStates.json') as file:
+    with open(site_dir + 'mostPopStates.json') as file:
         MPS = json.load(file)
-    with open(site_dir + '/mostPopNat.json') as file:
+    with open(site_dir + 'mostPopNat.json') as file:
         MPN = json.load(file)
         
     #take out data for relevant sex
@@ -232,9 +241,17 @@ def make_names_graph(sex = 'B', min_year = minYear, max_year = maxYear,
         Temp = {state_dict[str(year)][states[i]][0][0] for i in range(1, 52)}
         for i in range(1, 52):
             win_num = state_dict[str(year)][states[i]][0][1]
+            winners = [state_dict[str(year)][states[i]][0][0]]
             for j in range(1, 5):
                 if state_dict[str(year)][states[i]][j][1] == win_num:
                     Temp.add(state_dict[str(year)][states[i]][j][0])
+                    winners.append(state_dict[str(year)][states[i]][j][0])
+            for winner in winners:
+                if winner != nat_dict[str(year)]:
+                    if winner in weights.keys():
+                        weights[winner] += 1
+                    else:
+                        weights[winner] = 1
                     
         #remove the national winner from the set
         best = nat_dict[str(year)]
@@ -245,64 +262,53 @@ def make_names_graph(sex = 'B', min_year = minYear, max_year = maxYear,
         T = nx.complete_graph(list(Temp))
         names_graph.add_edges_from(list(T.edges))
         
-    #return the names graph
-    return names_graph
+        #make the list of names ordered by the number of times they appear 
+        #as gray for a year, descending.
+        list_of_weights = [(name, weights[name]) for name in weights.keys()]
+        list_of_weights.sort(key=lambda x: x[1], reverse = True)
+        ordered_list = [name for name,_ in list_of_weights]
+        
+    #return the names graph and the corresponding list of names
+    return names_graph, ordered_list
 
-        
-def weighted_grays(sex = 'B', min_year = minYear, max_year = maxYear,
-                   site_dir = siteFolder):
-    
-    #open the lists of most popular names
-    with open(site_dir + '/mostPopStates.json') as file:
-        MPS = json.load(file)
-    with open(site_dir + '/mostPopNat.json') as file:
-        MPN = json.load(file)
-        
-    #pull out the data for the relevant sex
-    state_dict = MPS[sex]
-    nat_winners = {str(Y): MPN[sex][str(Y)][0][0] 
-                       for Y in range(min_year, max_year + 1)}
-    
-    #initialize the dictionary to keep track of the times each name appears
-    #on a map
-    weights={}
-    for year in range(min_year, max_year + 1):
-        for i in range(1, 52):
-            win_num = state_dict[str(year)][states[i]][0][1]
-            winners = [state_dict[str(year)][states[i]][0][0]]
-            for j in range(1, 5):
-                if state_dict[str(year)][states[i]][j][1] == win_num:
-                    winners.append(state_dict[str(year)][states[i]][j][0])
-            for winner in winners:
-                if winner != nat_winners[str(year)]:
-                    if winner in weights.keys():
-                        weights[winner] += 1
-                    else:
-                        weights[winner] = 1
-    list_of_weights = [(name, weights[name]) for name in weights.keys()]
-    list_of_weights.sort(key=lambda x: x[1], reverse = True)
-    ordered_list = [name for name,_ in list_of_weights]
-    return ordered_list
 
 def greedy_coloring(sex = 'B', min_year = minYear, max_year = maxYear,
                     site_dir = siteFolder):
-    G = make_names_graph(sex, min_year, max_year, site_dir = site_dir)
-    names_in_order = weighted_grays(sex, min_year, max_year,
-                                    site_dir = site_dir)
-    coloring = {x:-1 for x in names_in_order}
-    for x in names_in_order:
+    """Makes a greedy coloring of the names graph where the names are colored
+    in order of the number of times they appear in gray on the map"""
+    
+    #get the graphs and order the vertices
+    G, order = make_names_graph(sex, min_year, max_year, site_dir = site_dir)
+    
+    #greedily color the vertices properly in order of importance
+    coloring = {x:-1 for x in order}
+    for x in order:
         i=0
         nbh_colors = {coloring[y] for y in list(G.adj[x])}
         while i in nbh_colors:
             i += 1
         coloring[x] = i
+        
+    #return the coloring
     return coloring
+
 
 def make_grayConnection_file(min_year = minYear, max_year = maxYear,
                              site_dir = siteFolder):
+    """Produces a json file at site_dir of the form
+    {SEX: {NAME: INTEGER}} which gives a proper coloring of the vertices of
+    the graph of names that need to appear in gray at some point on the map
+    (as the vertices) and names that appear on the map in some year together
+    both in gray (as the edges) - a different coloring for each sex."""
+    
     gray_connection = {sex: greedy_coloring(sex, min_year, max_year,
                                             site_dir = site_dir) 
                        for sex in ['F', 'M', 'B']}
     
-    with open(site_dir + '/grayConnection.json', 'w') as file:
+    with open(site_dir + 'grayConnection.json', 'w') as file:
         json.dump(gray_connection, file)
+
+make_list_of_all_names()
+most_popular_data()
+make_grayConnection_file()
+make_individual_name_files()
