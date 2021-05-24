@@ -10,10 +10,10 @@ Then you can just run this file."""
 
 minYear=1937
 maxYear=2020
-directoryState = '../../Name Data/namesbystate/'
-directoryYear = '../../Name Data/namesbyyear/'
+directoryState = '../Name Data/namesbystate/'
+directoryYear = '../Name Data/namesbyyear/'
 namesFilePath = 'distinct_names_list.json'
-siteFolder = '../website files/'
+siteFolder = 'website files/'
 
 header_state = ['state','sex','year','name','number']
 header_year = ['name','sex','number']
@@ -66,6 +66,8 @@ def make_individual_name_files(min_year = minYear, max_year = maxYear,
     given to a baby in state i in year j (state 0 is all of the US)."""
     
     #make the directory
+    path = os.path.join(site_dir, "namesData")
+    os.mkdir(path)
     for let in letters:
         path = os.path.join(site_dir + "namesData/", let)
         os.mkdir(path)
