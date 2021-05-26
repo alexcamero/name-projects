@@ -2,28 +2,37 @@
 CONSTANTS and VARIABLES 
 ================================================ */
 
-const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 
-'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 
+const states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 
+'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 
+'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 
+'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 
 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
 
 const statesWLines = ['RI','CT','NJ','MA','VT','NH','DC','MD','DE'];
 const statesNCentered = ['RI','CT','NJ','MA','DC','MD','DE'];
 const statesBottom = ['AK','HI','TX','FL','LA'];
-const statesRight = ['ME','NH','VT','MA','CT','RI','NY','PA','NJ','MD','DE','DC','VA','WV','OH','KY','TN','IN','MI','NC','SC','GA','FL','AL','MS','IL','WI'];
+const statesRight = ['ME','NH','VT','MA','CT','RI','NY','PA','NJ',
+'MD','DE','DC','VA','WV','OH','KY','TN','IN','MI','NC','SC','GA',
+'FL','AL','MS','IL','WI'];
 const boyGirlBoth = {'F':'Girl', 'M':'Boy', 'B':''};
 
-const grays = ["#606060","#696969","#787878","#888888","#989898","#686868","#707070","#808080","#909090","#A8A8A8","#A0A0A0","#A9A9A9",
-"#B0B0B0","#BEBEBE","#C8C8C8","#B8B8B8","#C0C0C0","#D0D0D0","#D3D3D3","#DCDCDC","#E0E0E0","#E8E8E8","#D8D8D8","#F0F0F0","#F5F5F5"];
+const grays = ["#606060","#696969","#787878","#888888","#989898",
+"#686868","#707070","#808080","#909090","#A8A8A8","#A0A0A0","#A9A9A9",
+"#B0B0B0","#BEBEBE","#C8C8C8","#B8B8B8","#C0C0C0","#D0D0D0","#D3D3D3",
+"#DCDCDC","#E0E0E0","#E8E8E8","#D8D8D8","#F0F0F0","#F5F5F5"];
 
+const popNameColors = {"Mary":0, "Linda":1, "Lisa":2, "Jennifer":3, 
+"Jessica":4, "Ashley":5, "Emily":6, "Emma":7, "Isabella":8, "Sophia":9, 
+"Olivia":10, "Robert":11, "James":12, "Michael":13, "David":14, 
+"Jacob":15, "Noah":16, "Liam":17};
 
-const popNameColors = {"Mary":0, "Linda":1, "Lisa":2, "Jennifer":3, "Jessica":4, "Ashley":5, 
-"Emily":6, "Emma":7, "Isabella":8, "Sophia":9, "Olivia":10, "Robert":11, "James":12, 
-"Michael":13, "David":14, "Jacob":15, "Noah":16, "Liam":17};
+var popColors = ["#56C6A9","#B55A30","#9BB7D4","#FDAC53","#0072B5",
+"#A0DAA9","#926AA6","#00A170","#D2386C","#4B5335","#F5DF4D","#FFA500",
+"#798EA4","#CD212A","#00758F","#6B5876","#E8A798","#FA7A35"];
 
-var popColors = ["#56C6A9","#B55A30","#9BB7D4","#FDAC53","#0072B5","#A0DAA9","#926AA6","#00A170","#D2386C",
-"#4B5335","#F5DF4D","#FFA500","#798EA4","#CD212A","#00758F","#6B5876","#E8A798","#FA7A35"];
+var colors = ['#FDAC53', '#9BB7D4', '#B55A30', '#F5DF4D', '#0072B5', 
+'#A0DAA9', '#E9897E', '#00A170', '#D2386C'];
 
-var colors = ['#FDAC53', '#9BB7D4', '#B55A30', '#F5DF4D', '#0072B5', '#A0DAA9', '#E9897E', '#00A170', '#D2386C'];
 var winners = [];
 var customData = {};
 
@@ -84,7 +93,8 @@ function menuFunctionSex(newSexChoice) {
 }
 
 function convertHexToRGBA(hex) {
-	conv = {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'A':10,'B':11,'C':12,'D':13,'E':14,'F':15};
+	conv = {'0':0,'1':1,'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,
+	'8':8,'9':9,'A':10,'B':11,'C':12,'D':13,'E':14,'F':15};
 	second = hex.slice(3,5);
 	third = hex.slice(5,7);
 	first = conv[hex.slice(1,2)]*16+conv[hex.slice(2,3)];
@@ -131,7 +141,6 @@ function shuffleColors() {
 		shuffleCustom();	
 	}
 }
-
 
 function colorMap() {
 	for (state of states) {
@@ -225,9 +234,11 @@ function updateTotal() {
 	if (mostPop) {
 		L = mostPopN[sex][year].length;
 		headline = "Most Popular<br>" + boyGirlBoth[sex] + " Names in " + year;
-		words = "<h5>Top "+boyGirlBoth[sex]+" Names</h5><table class='table table-hover table-borderless table-sm'>";
+		words = "<h5>Top "+boyGirlBoth[sex]
+			+" Names</h5><table class='table table-hover table-borderless table-sm'>";
 		for (i=0; i<L; i++) {
-			words = words + "<tr><td>" + mostPopN[sex][year][i][0] + "</td><td>" + mostPopN[sex][year][i][1] + "</td></tr>";
+			words = words + "<tr><td>" + mostPopN[sex][year][i][0] 
+				+ "</td><td>" + mostPopN[sex][year][i][1] + "</td></tr>";
 		}
 		words += "</table>";
 		$("#Yspan").html(year);
@@ -248,7 +259,16 @@ function updateTotal() {
 			} else {
 				res = customData[year]['NAT'][i];
 			}
-			T.push(['<tr style="background-color:'+convertHexToRGBA(colors[i])+';" onMouseOver="this.style.backgroundColor=&quot;'+colors[i]+'&quot;" onMouseOut="this.style.backgroundColor=&quot;'+convertHexToRGBA(colors[i])+'&quot;"><td>' + names[i] + '</td><td>' + res + '</td><tr>', customData[year]['NAT'][i], i, names[i]]);
+			T.push(['<tr style="background-color:' + convertHexToRGBA(colors[i]) 
+				+ ';" onMouseOver="this.style.backgroundColor=&quot;'
+				+ colors[i]
+				+ '&quot;" onMouseOut="this.style.backgroundColor=&quot;'
+				+ convertHexToRGBA(colors[i])
+				+ '&quot;"><td>'
+				+ names[i] 
+				+ '</td><td>' 
+				+ res 
+				+ '</td><tr>', customData[year]['NAT'][i], i, names[i]]);
 		};
 		T.sort(function(a, b){return b[1] - a[1]});
 		for (i=0; i<n; i++) {
@@ -354,11 +374,13 @@ function makeBoth() {
 }
 
 function getStatePop(state) {
-	words = "<h6>" + state + " results " + year + "</h6><table class='table table-hover table-borderless table-sm'>";
+	words = "<h6>" + state + " results " + year 
+		+ "</h6><table class='table table-hover table-borderless table-sm'>";
 	if (mostPop) {
 		L = mostPopS[sex][year][state].length;
 		for (i=0; i<L; i++) {
-			words = words + "<tr><td>" + mostPopS[sex][year][state][i][0] + "</td><td>" + mostPopS[sex][year][state][i][1] + "</td></tr>";
+			words = words + "<tr><td>" + mostPopS[sex][year][state][i][0] 
+				+ "</td><td>" + mostPopS[sex][year][state][i][1] + "</td></tr>";
 		}
 	} else {
 		T = [];
@@ -368,7 +390,9 @@ function getStatePop(state) {
 			} else {
 				res = customData[year][state][i];
 			}
-			T.push(["<tr style='color:"+colors[i]+";'><td>" + names[i] + "</td><td>" + res + "</td></tr>", customData[year][state][i]]);
+			T.push(["<tr style='color:"+colors[i]+";'><td>" 
+				+ names[i] + "</td><td>" + res 
+				+ "</td></tr>", customData[year][state][i]]);
 		};
 		T.sort(function(a, b){return b[1] - a[1]});
 		for (i=0; i<n; i++) {
@@ -455,29 +479,26 @@ function step() {
 function nameSize() {
 	$("#Wspan").removeAttr("textLength");
 	$("#Wspan").removeAttr("lengthAdjust");
-	if (document.getElementById("Wspan").getComputedTextLength() > Number($("#Wspanrect").attr("width"))) {
-		$("#Wspan").attr("textLength",Number($("#Wspanrect").attr("width")))
-		.attr("lengthAdjust", "spacingAndGlyphs");
-	}
+	if (document.getElementById("Wspan")
+		.getComputedTextLength() > Number($("#Wspanrect").attr("width"))) {
+			$("#Wspan").attr("textLength",Number($("#Wspanrect").attr("width")))
+			.attr("lengthAdjust", "spacingAndGlyphs");
+		}
 
 	for (state of states) {
 		$("#txt"+state).removeAttr("textLength");
 		$("#txt"+state).removeAttr("lengthAdjust");
 		$("#"+state+"txt").removeAttr("textLength");
 		$("#"+state+"txt").removeAttr("lengthAdjust");
-		if (document.getElementById(state+"txt").getComputedTextLength() > Number($("#"+state+"rect").attr("width"))) {
-			$("#txt"+state).attr("textLength",Number($("#"+state+"rect").attr("width")))
-			.attr("lengthAdjust", "spacingAndGlyphs");
-			$("#"+state+"txt").attr("textLength",Number($("#"+state+"rect").attr("width")))
-			.attr("lengthAdjust", "spacingAndGlyphs");
-		}
+		if (document.getElementById(state+"txt")
+			.getComputedTextLength() > Number($("#"+state+"rect").attr("width"))) {
+				$("#txt"+state).attr("textLength",Number($("#"+state+"rect").attr("width")))
+				.attr("lengthAdjust", "spacingAndGlyphs");
+				$("#"+state+"txt").attr("textLength",Number($("#"+state+"rect").attr("width")))
+				.attr("lengthAdjust", "spacingAndGlyphs");
+			}
 	}
 }
-
-
-
-
-
 
 /* =====================================================
 INITIALIZATION
@@ -503,7 +524,12 @@ $(document).ready(function () {
 
 for (state of states) {
 	pathStuff = $("#"+state).attr("d");
-	document.getElementById(state+'g').insertAdjacentHTML('beforeend','<path d="'+pathStuff+'" id="'+state+'b" class="state stateboundary" />'); 
+	document.getElementById(state+'g')
+		.insertAdjacentHTML('beforeend','<path d="'
+			+ pathStuff
+			+ '" id="'
+			+ state
+			+ 'b" class="state stateboundary" />'); 
 
 	$("#"+state+"b").insertAfter("#"+state);
 
